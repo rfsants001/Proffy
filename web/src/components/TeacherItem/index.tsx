@@ -1,32 +1,54 @@
 import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import api from '../../servies/api';
 
 import './styles.css';
 
-function TeacherItem(){
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({teacher}) => {
+    function createNewConnection(){
+        api.post('connections', {
+            user_id: teacher.id,
+        });
+    }
+
     return (
         <article className="teacher-item">
                   <header>
-                      <img src="https://4.bp.blogspot.com/-6EoPBFwCzNc/VXv_si7-w8I/AAAAAAAACF4/oheoBnnPe7A/s1600/len_avatar_os.png" alt=""/>
+                      <img src={teacher.avatar} alt={teacher.name}/>
                       <div>
-                          <strong>Professor X</strong>
-                          <span>Matemática</span>
+                        <strong>{teacher.name}</strong>
+                        <span>{teacher.subject}</span>
                       </div>
                   </header>
-                  <p>
-                  Professor doutor em matemática, com experiência de aulas na unesp, dá aulas para o ensino fundamental, médio e superior nas mais diversas disciplinas de matemática.
-                  </p>
-
+                        <p>{teacher.bio}</p>
                   <footer>
                       <p>
-                          Preço/hora
-                          <strong>R$ 70,00</strong>
+                        Preço/hora
+                        <strong>R$ {teacher.cost}</strong>
                       </p>
-                      <button type="button">
+                      <a 
+                      onClick={createNewConnection} 
+                      target='_blank' 
+                      href={`https://wa.me/${teacher.whatsapp}`}
+                      rel="noopener noreferrer"
+                      >
                           <img src={whatsappIcon} alt="Whatsapp"/>
                           Entrar em contato
-                      </button>
+                      </a>
                   </footer>
               </article>
     );
